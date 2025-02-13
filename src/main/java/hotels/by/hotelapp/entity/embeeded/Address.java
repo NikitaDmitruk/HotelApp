@@ -1,10 +1,7 @@
 package hotels.by.hotelapp.entity.embeeded;
 
 import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Embeddable
 @AllArgsConstructor
@@ -19,4 +16,19 @@ public class Address {
     private String county;
     private String postCode;
 
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        str
+                .append(houseNumber)
+                .append(" ")
+                .append(street)
+                .append(", ")
+                .append(city)
+                .append(", ")
+                .append(postCode)
+                .append(", ")
+                .append(county);
+        return str.toString();
+    }
 }
