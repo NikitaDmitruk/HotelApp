@@ -52,6 +52,18 @@ public class HotelController {
         return ResponseEntity.ok(hotels);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<ResponseShortHotelDto>> getAllHotelsByParam(@RequestParam(required = false) String name,
+                                                                           @RequestParam(required = false) String brand,
+                                                                           @RequestParam(required = false) String city,
+                                                                           @RequestParam(required = false) String county,
+                                                                           @RequestParam(required = false) List<String> amenities) {
+        List<ResponseShortHotelDto> shortHotelDtos = hotelService.searchHotels(name, brand, city, county, amenities);
+        if (shortHotelDtos.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(shortHotelDtos);
+    }
 
 
 }

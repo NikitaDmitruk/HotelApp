@@ -5,6 +5,8 @@ import hotels.by.hotelapp.dto.ResponseShortHotelDto;
 import hotels.by.hotelapp.entity.Hotel;
 import hotels.by.hotelapp.mapper.HotelMapper;
 import hotels.by.hotelapp.repository.HotelRepository;
+import hotels.by.hotelapp.specification.HotelSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,5 +55,13 @@ public class HotelService {
         Hotel hotel = hotelRepository.findById(id).orElseThrow();
         hotel.setAmenities(amenities);
         hotelRepository.save(hotel);
+    }
+
+    public List<ResponseShortHotelDto> searchHotels (String name, String brand, String city, String county, List<String> amenities) {
+        Specification<Hotel> spec = HotelSpecification.searchHotels(name, brand, city, county, amenities);
+        List<Hotel> hotels = hotelRepository.findAll(spec);
+        return hotels.stream()
+                .map(hotelMapper::toResponseShortHotelDto)
+                .collect(Collectors.toList());
     }
 }
