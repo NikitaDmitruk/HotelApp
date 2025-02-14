@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class HotelService {
@@ -32,7 +34,7 @@ public class HotelService {
     public ResponseShortHotelDto createHotel(CreateHotelDto hotelDto) {
         Hotel hotel = hotelMapper.toEntity(hotelDto);
         Hotel savedHotel = hotelRepository.save(hotel);
-        return hotelMapper.toResponse(savedHotel);
+        return hotelMapper.toResponseShortHotelDto(savedHotel);
 
     }
 
@@ -40,9 +42,16 @@ public class HotelService {
         return hotelRepository.findById(id);
     }
 
-    public List<Hotel> getAllHotels() {
-        return hotelRepository.findAll();
+    public List<ResponseShortHotelDto> getAllHotels() {
+        List<Hotel> hotels = hotelRepository.findAll();
+        List<ResponseShortHotelDto> hotelDtos = hotels.stream().map(hotelMapper::toResponseShortHotelDto).toList();
+        return hotelDtos;
     }
 
 
+    public void addAmenities(Long id, List<String> amenities) {
+        Hotel hotel = hotelRepository.findById(id).orElseThrow();
+        hotel.setAmenities(amenities);
+        hotelRepository.save(hotel);
+    }
 }
