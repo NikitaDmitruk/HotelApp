@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -63,6 +64,15 @@ public class HotelController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(shortHotelDtos);
+    }
+
+    @GetMapping("/histogram/{param}")
+    public ResponseEntity<Map<String, Long>> getHotelHistogram(@PathVariable String param) {
+        Map<String, Long> hotelHistogram = hotelService.getHotelHistogram(param);
+        if (hotelHistogram.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(hotelHistogram);
     }
 
 
