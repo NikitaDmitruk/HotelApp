@@ -7,7 +7,6 @@ import hotels.by.hotelapp.entity.Hotel;
 import hotels.by.hotelapp.entity.embeeded.Address;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface HotelMapper {

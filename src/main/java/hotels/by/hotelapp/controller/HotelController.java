@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -52,6 +53,27 @@ public class HotelController {
         return ResponseEntity.ok(hotels);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<ResponseShortHotelDto>> getAllHotelsByParam(@RequestParam(required = false) String name,
+                                                                           @RequestParam(required = false) String brand,
+                                                                           @RequestParam(required = false) String city,
+                                                                           @RequestParam(required = false) String county,
+                                                                           @RequestParam(required = false) List<String> amenities) {
+        List<ResponseShortHotelDto> shortHotelDtos = hotelService.searchHotels(name, brand, city, county, amenities);
+        if (shortHotelDtos.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(shortHotelDtos);
+    }
+
+    @GetMapping("/histogram/{param}")
+    public ResponseEntity<Map<String, Long>> getHotelHistogram(@PathVariable String param) {
+        Map<String, Long> hotelHistogram = hotelService.getHotelHistogram(param);
+        if (hotelHistogram.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(hotelHistogram);
+    }
 
 
 }
