@@ -3,6 +3,7 @@ package hotels.by.hotelapp.service;
 import hotels.by.hotelapp.dto.CreateHotelDto;
 import hotels.by.hotelapp.dto.ResponseShortHotelDto;
 import hotels.by.hotelapp.entity.Hotel;
+import hotels.by.hotelapp.exception.HotelNotFoundException;
 import hotels.by.hotelapp.mapper.HotelMapper;
 import hotels.by.hotelapp.repository.HotelRepository;
 import hotels.by.hotelapp.specification.HotelSpecification;
@@ -41,6 +42,9 @@ public class HotelService {
 
     public ResponseShortHotelDto createHotel(CreateHotelDto hotelDto) {
         Hotel hotel = hotelMapper.toEntity(hotelDto);
+//        if(hotelRepository.existsByName(hotel.getName())) {
+//            throw new HotelAlreadyExistException("Hotel already exists"); // Could be a custom exception
+//        }
         Hotel savedHotel = hotelRepository.save(hotel);
         return hotelMapper.toResponseShortHotelDto(savedHotel);
     }
@@ -49,14 +53,13 @@ public class HotelService {
         return hotelRepository.findById(id);
     }
 
-    public List<ResponseShortHotelDto> getAllHotels() {
-        List<Hotel> hotels = hotelRepository.findAll();
-        return hotels.stream().map(hotelMapper::toResponseShortHotelDto).toList();
+    public List<Hotel> getAllHotels() {
+        return hotelRepository.findAll();
     }
 
 
     public void addAmenities(Long id, List<String> amenities) {
-        Hotel hotel = hotelRepository.findById(id).orElseThrow();
+        Hotel hotel = hotelRepository.findById(id).orElseThrow(HotelNotFoundException::new);
         hotel.setAmenities(amenities);
         hotelRepository.save(hotel);
     }
@@ -76,7 +79,7 @@ public class HotelService {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
         Root<Hotel> hotel = query.from(Hotel.class);
-        // Обрабатываем параметр и определяем поле для группировки
+
         if ("amenities".equalsIgnoreCase(param)) {
             return getAmenitiesHistogram(cb, query, hotel);
         }

@@ -3,6 +3,7 @@
     import hotels.by.hotelapp.entity.embeeded.Address;
     import hotels.by.hotelapp.entity.embeeded.ArrivalTime;
     import hotels.by.hotelapp.entity.embeeded.Contacts;
+
     import jakarta.persistence.*;
     import lombok.AllArgsConstructor;
     import lombok.Getter;

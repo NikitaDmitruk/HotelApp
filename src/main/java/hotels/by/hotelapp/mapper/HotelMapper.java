@@ -10,8 +10,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface HotelMapper {
-//    HotelMapper INSTANCE = Mappers.getMapper(HotelMapper.class);
-
 
     Hotel toEntity(CreateHotelDto hotelDto);
 
@@ -19,19 +17,10 @@ public interface HotelMapper {
 
     @Mapping(target = "address", expression = "java(addressToString(hotel.getAddress()))")
     @Mapping(target = "phone", source = "contacts.phone")
-    @Mapping(target = "description", expression = "java(optionalDescription(hotel))")
     ResponseShortHotelDto toResponseShortHotelDto(Hotel hotel);
 
     default String addressToString(Address address) {
         return address.toString();
     }
-
-    default String optionalDescription (Hotel hotel) {
-        if (hotel.getDescription() != null) {
-            return hotel.getDescription();
-        }
-        return "-";
-    }
-
 
 }
